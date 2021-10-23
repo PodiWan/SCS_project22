@@ -1,5 +1,6 @@
 import cv2
 from datetime import datetime
+from opencv_module.constants import *
 
 def movement_detected(status_list):
         if status_list[-1] == 1 and status_list[-2] == 0:
@@ -10,7 +11,11 @@ def generate_frames():
     status_list = [None, None]
     video = cv2.VideoCapture(0)
 
+    frame_count = 0
+
     while True:
+        frame_count += 1
+
         check, frame = video.read()
         if not check:
             print(f'Could not read camera output')
@@ -20,8 +25,9 @@ def generate_frames():
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray_frame = cv2.GaussianBlur(gray_frame, (25, 25), 0)
 
-        if baseline_image is None:
+        if frame_count == FRAME_TRESHOLD or baseline_image is None:
             baseline_image = gray_frame
+            frame_count = 0
             continue
 
         delta = cv2.absdiff(baseline_image, gray_frame)
