@@ -9,9 +9,7 @@ socket_ = SocketIO(app, async_mode=async_mode)
 
 @app.route('/video-feed')
 def video_feed():
-    video_response = Response(utils.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    # SocketIO.emit('video', video_response, broadcast=True)
-    return video_response
+    return Response(utils.generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/')
 def index():
