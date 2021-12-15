@@ -1,10 +1,16 @@
 import cv2
-from datetime import datetime
+from datetime import datetime, date
 from opencv_module.constants import *
 
+def write_log():
+    current_time, current_day = datetime.now(), date.today()
+    filename = f'logs{current_day}_{current_time.hour}.txt'
+    with open(filename, 'a+') as logfile:
+        logfile.write(f'[{current_time}]: Movement detected\n')
+
 def movement_detected(status_list):
-        if status_list[-1] == 1 and status_list[-2] == 0:
-            print(f'{datetime.now()}: Movement detected')
+    if status_list[-1] == 1 and status_list[-2] == 0:
+        write_log()
 
 def generate_frames():
     baseline_image = None
@@ -49,9 +55,4 @@ def generate_frames():
             b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
         )
-
-        key = cv2.waitKey(1)
-
-        if key == ord('q'):
-            break
     video.release()
